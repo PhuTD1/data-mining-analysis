@@ -39,4 +39,34 @@ class DecisionTree:
 
         self.min_samples = min_samples
         self.max_depth = max_depth
+    
+    def split_data(self, dataset, feature, threshold):
+        """
+        Splits the given dataset into two datasets based on the given freature and threshold.
         
+        Parameters:
+            dataset (ndarray) : Input dataset.
+            feature (int): Index of the feature to be split on.
+            threshold (float): Threshold value to split it the feature on.
+
+            Return:
+                left_dataset (nparray): Subset of the dataset with values less than or equal to the threshold.
+                right_dataset (ndarray): Subset of the dataset with values greater than the threshold.
+        """
+
+        # Create dmpty arrays to store te left and right datasets
+        left_dataset = []
+        right_dataset = []
+
+        #Loop over each row in the dataset and split based on the given feature and threshold
+        for row in dataset:
+            if row[feature] <= threshold:
+                left_dataset.append(row)
+            else:
+                right_dataset.append(row)
+        
+        # Convert the left and right dataset to numpy arrays and return
+        left_dataset = np.array(left_dataset)
+        right_dataset = np.array(right_dataset)
+        return left_dataset, right_dataset
+    
