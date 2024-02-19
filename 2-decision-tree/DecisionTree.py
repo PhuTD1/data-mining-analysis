@@ -152,3 +152,18 @@ class DecisionTree:
                         best_split["right_dataset"] = right_dataset
                         best_split["gain"] = information_gain
         return best_split
+
+    def calculater_leaf_value(self, y):
+        """
+        Calculates the msot occurring value in the given list of y values.
+        
+        Args:
+            y (list): The list of y values.
+
+        Returns:
+            The most occurring value in the list.
+        """
+        y = list(y)
+        # get the highest present class in the array
+        most_occuring_value = max(y, key=y.count)
+        return most_occuring_value
