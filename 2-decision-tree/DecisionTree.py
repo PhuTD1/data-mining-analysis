@@ -167,3 +167,34 @@ class DecisionTree:
         # get the highest present class in the array
         most_occuring_value = max(y, key=y.count)
         return most_occuring_value
+    def build_tree(self, dataset, current_depth=0):
+        """
+        Recursively builds a decision tree from the given dataset.
+
+        Args:
+        dataset (ndarray): The dataset to build the tree from.
+        current_depth (int): the current depth of the tree.
+
+        Returns:
+        Node: The root node of the build decision tree.
+        """
+        # split the dataset into X, y values
+        X, y = dataset[:, : -1], dataset[:, -1]
+        n_samples, n_features = X.shape
+        # keeps spliting until stopping condistions are met
+        if n_samples >= self.min_samples and current_depth <= self.max_depth:
+            # Get the best split
+            best_split = self.best_split(dataset,n_samples,n_features)
+            # chechk if gain isn't zero
+            if best_split['gain']:
+                # continue splitting the left and the right child
+                # Incement current Depth
+                left_node = self.build_tree(best_split["left_dataset"],current_depth + 1)
+                right_node = self.build_tree(best_split['right_dataset'], current_depth + 1)
+                # return decision node
+                return Node(best_split['feature'], best_split['thereshold'], left_node, right_node, best_split['gain'])
+            # compute leaf node value
+            leaf_value = self.calculater_leaf_value(y)
+            # return leaf node value
+            return Node(value=leaf_value)
+        
