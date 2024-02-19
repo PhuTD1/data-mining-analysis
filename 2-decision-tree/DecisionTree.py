@@ -251,8 +251,8 @@ class DecisionTree:
         else:
             # if it's node a leaf node we'll get it's feature and traverse through the ree accordingly
             feature = x[node.feature]
-            if feature <= node. threshold:
+            if feature <= node.threshold:
                 return self.make_prediction(x, node.left)
             else:
-                return self.make_perdiction(x, node.right)
+                return self.make_prediction(x, node.right)
             
