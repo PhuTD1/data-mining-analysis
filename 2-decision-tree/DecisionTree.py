@@ -28,7 +28,7 @@ class DecisionTree:
     """
     A decision tree classifier for binary classification problems.
     """
-    def __init__(self, min_samples = 2 ,max_depth = 2):
+    def __init__(self, min_samples = 2, max_depth = 2):
         """
         Constructor for DecisioTree class.
         
@@ -58,7 +58,7 @@ class DecisionTree:
         left_dataset = []
         right_dataset = []
 
-        #Loop over each row in the dataset and split based on the given feature and threshold
+        # Loop over each row in the dataset and split based on the given feature and threshold
         for row in dataset:
             if row[feature] <= threshold:
                 left_dataset.append(row)
@@ -99,18 +99,56 @@ class DecisionTree:
             Returns:
                 information_gain (float): Informatioin gain of the split
         """
-        #set initial information gain to 0
+        # set initial information gain to 0
         information_gain = 0
-        #compute entropy for parent
+        # compute entropy for parent
         parent_entropy = self.entropy(parent)
 
         # calculate weight for left and right nodes
         weight_left = len(left) / len(parent)
-        weight_right = len(right)/ len(parent)
+        weight_right = len(right) / len(parent)
         # copute entropy for left and right nodes
-        entropy_left , entropy_right = self.entropy(left),self.entropy(right)
+        entropy_left, entropy_right = self.entropy(left), self.entropy(right)
         # calculate weighted entropy
         weighted_entropy = weight_left*entropy_left + weight_right * entropy_right
-        #calculate information gain
+        # calculate information gain
         information_gain = parent_entropy - weighted_entropy 
         return information_gain
+    def best_split(self, dataset, num_samples, num_features):
+        """
+        Finds the best split for the given dataset.
+        Args:
+        dataset (ndarray): The dataset to split.
+        num_samples (int): The number of samples in the dataset.
+        num_features (int): The number of features in the dataset.
+
+        Returns:
+        dict: A dictionary with the best split feature index, threshold, gain,
+            lef and right dataset
+        """
+        # dictionary to stores the best split values
+        best_split = {'gain': -1, 'feature': None, 'threshold': None}
+        # loop over all the features
+        for feature_idx in range(num_features):
+            # get the feature at the current feature_index
+            feature_values = dataset[:, feature_idx]
+            # get unique values of that feature
+            thresholds = np.unique(feature_values)
+            # loop over all values fo the feature
+            for threshold in thresholds:
+                # get left and right dataset
+                left_dataset, right_dataset = self.split_data(dataset, feature_idx, threshold)
+                # check if either datset is empty
+                if len(left_dataset) and len(right_dataset):
+                    # get y values of the parent and left, right nodes
+                    y, left_y, right_y = dataset[:, -1], left_dataset[:, -1], right_dataset[:, -1]
+                    # compute informationi gain based on the y values
+                    information_gain = self.information_gain(y, left_y, right_y)
+                    # update the best split if conditions are met
+                    if information_gain > best_split["gain"]:
+                        best_split["feature"] = feature_idx
+                        best_split["threshold"] = threshold
+                        best_split["left_dataset"] = left_dataset
+                        best_split["right_dataset"] = right_dataset
+                        best_split["gain"] = information_gain
+        return best_split
