@@ -110,7 +110,7 @@ class DecisionTree:
         # copute entropy for left and right nodes
         entropy_left, entropy_right = self.entropy(left), self.entropy(right)
         # calculate weighted entropy
-        weighted_entropy = weight_left*entropy_left + weight_right * entropy_right
+        weighted_entropy = weight_left*entropy_left + weight_right*entropy_right
         # calculate information gain
         information_gain = parent_entropy - weighted_entropy 
         return information_gain
@@ -137,13 +137,16 @@ class DecisionTree:
             # loop over all values fo the feature
             for threshold in thresholds:
                 # get left and right dataset
-                left_dataset, right_dataset = self.split_data(dataset, feature_idx, threshold)
+                left_dataset, right_dataset = self.split_data(
+                    dataset, feature_idx, threshold)
                 # check if either datset is empty
                 if len(left_dataset) and len(right_dataset):
                     # get y values of the parent and left, right nodes
-                    y, left_y, right_y = dataset[:, -1], left_dataset[:, -1], right_dataset[:, -1]
+                    y, left_y, right_y = dataset[:, -1], left_dataset[:, -1], 
+                    right_dataset[:, -1]
                     # compute informationi gain based on the y values
-                    information_gain = self.information_gain(y, left_y, right_y)
+                    information_gain = self.information_gain(y, left_y, 
+                                                             right_y)
                     # update the best split if conditions are met
                     if information_gain > best_split["gain"]:
                         best_split["feature"] = feature_idx
@@ -184,17 +187,72 @@ class DecisionTree:
         # keeps spliting until stopping condistions are met
         if n_samples >= self.min_samples and current_depth <= self.max_depth:
             # Get the best split
-            best_split = self.best_split(dataset,n_samples,n_features)
+            best_split = self.best_split(dataset, n_samples, n_features)
             # chechk if gain isn't zero
             if best_split['gain']:
                 # continue splitting the left and the right child
                 # Incement current Depth
-                left_node = self.build_tree(best_split["left_dataset"],current_depth + 1)
-                right_node = self.build_tree(best_split['right_dataset'], current_depth + 1)
+                left_node = self.build_tree(best_split["left_dataset"], 
+                                            current_depth + 1)
+                right_node = self.build_tree(best_split['right_dataset'], 
+                                             current_depth + 1)
                 # return decision node
-                return Node(best_split['feature'], best_split['thereshold'], left_node, right_node, best_split['gain'])
-            # compute leaf node value
-            leaf_value = self.calculater_leaf_value(y)
-            # return leaf node value
-            return Node(value=leaf_value)
+                return Node(best_split['feature'], best_split['thereshold'], 
+                            left_node, right_node, best_split['gain'])
+        # compute leaf node value
+        leaf_value = self.calculater_leaf_value(y)
+        # return leaf node value
+        return Node(value=leaf_value)
         
+    def fit(self, X, y):
+        """
+        Builds and fits the decision tree to the given X and y values.
+        
+        Args:
+        X (ndarray): The feature matrix.
+        y (ndarray): The target values.
+        """
+        dataset = np.concatenate((X,y),axis=1)
+        self.root = self.build_tree(dataset)
+    def predict(self, X):
+        """
+        Predicts the class labels for each instance in the feature matrix X.
+        
+        Args:
+        X (ndarray): The feature matrix to make predistions for.
+        
+        Returns:
+        List: Alist of predicted calss labels.
+        """
+        # Create an empty list to store the predictions
+        predictions = []
+        # For each instance in X, make a prediction by traversing the tree
+        for x in X:
+            prediction = self.make_prediction(x,self.root)
+            # append the prediction to the list of predictions
+            predictions.append(prediction)
+        # convert the list to a numpy array and return it
+        np.array(predictions)
+        return predictions
+    def make_prediction(self, x, node):
+        """
+        Traverses the decision tree to predict the target value for the given feature vector.
+        
+        Args:
+        x (ndarray): The feature vector to predict the target value for.
+        node (Node): The current node being evalueted
+        
+        Return:
+        The predicted target value for the given feature vecotr.
+        """
+        # if the node has value i.e it's a leaf node extract it's value 
+        if node.value != None:
+            return node.value
+        else:
+            # if it's node a leaf node we'll get it's feature and traverse through the ree accordingly
+            feature = x[node.feature]
+            if feature <= node. threshold:
+                return self.make_prediction(x, node.left)
+            else:
+                return self.make_perdiction(x, node.right)
+            
