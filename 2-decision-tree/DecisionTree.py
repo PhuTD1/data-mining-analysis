@@ -86,3 +86,31 @@ class DecisionTree:
         hist = np.bincount(y) 
         ps = hist/len(y)
         return - np.sum([p * np.log(p) for p in ps if p > 0])
+    
+    def information_gain(self, parent, left, right):
+        """
+        Computers the information gain from splitting the parent dataset.
+
+        Parameters:
+            parrent (ndarray): Input parent dataset.
+            left (ndarray): Subset of the parent data set after split on a feature.
+            right  (ndarray): Subset of the parent data set after split on a feature.
+
+            Returns:
+                information_gain (float): Informatioin gain of the split
+        """
+        #set initial information gain to 0
+        information_gain = 0
+        #compute entropy for parent
+        parent_entropy = self.entropy(parent)
+
+        # calculate weight for left and right nodes
+        weight_left = len(left) / len(parent)
+        weight_right = len(right)/ len(parent)
+        # copute entropy for left and right nodes
+        entropy_left , entropy_right = self.entropy(left),self.entropy(right)
+        # calculate weighted entropy
+        weighted_entropy = weight_left*entropy_left + weight_right * entropy_right
+        #calculate information gain
+        information_gain = parent_entropy - weighted_entropy 
+        return information_gain
