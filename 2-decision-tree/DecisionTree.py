@@ -70,3 +70,19 @@ class DecisionTree:
         right_dataset = np.array(right_dataset)
         return left_dataset, right_dataset
     
+    def entropy(self, y):
+        """
+        Computes the entropy of the given label values.
+
+        Paremetes:
+            y (ndarray): Input label values.
+
+        Returns:
+            entropy (float): Entropy of the given lable values.
+        """
+
+        # fomula entropy = - sum( log(p) * p )  with p is ratio of feature in the dataset
+        # function bit count caculate the numbers of features in the data set y
+        hist = np.bincount(y) 
+        ps = hist/len(y)
+        return - np.sum([p * np.log(p) for p in ps if p > 0])
