@@ -212,7 +212,7 @@ class DecisionTree:
         X (ndarray): The feature matrix.
         y (ndarray): The target values.
         """
-        dataset = np.concatenate((X,y),axis=1)
+        dataset = np.concatenate((X, y), axis=1)
         self.root = self.build_tree(dataset)
     def predict(self, X):
         """
