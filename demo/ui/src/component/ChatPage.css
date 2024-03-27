@@ -1,0 +1,92 @@
+body {
+  background-color: #000000; /* Set the background color to gray */
+  margin: 0;
+}
+.ChatApp {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  height: 100vh;
+}
+
+.message-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 70%; /* Tùy chỉnh chiều rộng tối đa của tin nhắn */
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.message-sender {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.user-message {
+  background-color: #414040;
+  border-radius:10px;
+  align-self: flex-end;
+}
+
+.user-sender {
+  color: #f9f9f9;
+}
+
+.user-text {
+  color: #f1eeee;
+}
+
+.bot-message {
+  background-color: #e1537c;
+  border-radius:10px;
+  align-self: flex-start;
+}
+
+.bot-sender {
+  color: rgb(0, 0, 0);
+}
+
+.bot-text {
+  color: rgb(232, 224, 224);
+}
+
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  margin-top:auto;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #414040;
+  color: #fff;
+}
+
+button {
+  padding: 10px;
+  margin-left: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #e1537c; /* Button background color, you can change this */
+  color: #fff; /* Button text color, you can change this */
+  border: none;
+  border-radius: 5px; /* Rounded corners for the button */
+}
+
+button:hover {
+  background-color: #f43168; /* Change color on hover if desired */
+}
