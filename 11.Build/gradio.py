@@ -5,4 +5,3 @@ def image_classifier(inp):
 
 demo = gr.Interface(fn=image_classifier, inputs="image", outputs="label")
 demo.launch()
-	
